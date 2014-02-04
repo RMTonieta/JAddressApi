@@ -27,8 +27,8 @@ import whs.jaddressapi.base.Address;
 /**
  * @author WilliamStenico 17/09/2013
  * 
- * Classe responsável por interagir com o site dos correios Chamado de
- * MOBILE pois a url dos correios é mobile
+ * Classe responsï¿½vel por interagir com o site dos correios Chamado de
+ * MOBILE pois a url dos correios ï¿½ mobile
  */
 public class CorreiosMobileCrawler {
 
@@ -57,7 +57,7 @@ public class CorreiosMobileCrawler {
 		//int responseCode = response.getStatusLine().getStatusCode();
 		
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response
-				.getEntity().getContent()));
+				.getEntity().getContent(),"ISO-8859-1"));
 
 		StringBuffer result = new StringBuffer();
 		String line = "";
@@ -99,7 +99,7 @@ public class CorreiosMobileCrawler {
 
 	/*
 	 * Retorna a lista dos parametros usados no site dos correios. No caso o
-	 * campo cepEntrada pode ser um endereço por exemplo nomeRua, Cidade
+	 * campo cepEntrada pode ser um endereï¿½o por exemplo nomeRua, Cidade
 	 */
 	public List<NameValuePair> getInputParams(String endereco)
 			throws UnsupportedEncodingException {
