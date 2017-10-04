@@ -20,6 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.junit.Test;
 
 import whs.jaddressapi.base.Address;
 
@@ -32,7 +33,7 @@ import whs.jaddressapi.base.Address;
  */
 public class CorreiosMobileCrawler {
 
-	final String url = "http://m.correios.com.br/movel/buscaCepConfirma.do"; 
+	final String url = "http://www.buscacep.correios.com.br/sistemas/buscacep/resultadoBuscaCepEndereco.cfm"; 
 
 	List<NameValuePair> postParams;
 
@@ -70,28 +71,34 @@ public class CorreiosMobileCrawler {
 		if (doc.select(".erro").size() > 0)
 			throw new InvalidParameterException();
 
-		Elements div = doc.select(".respostadestaque");		
+		Elements div = doc.select(".tmptabela");
+		
+		Elements tableRowElements = div.select(":not(thead) tr");
+		
+//		Debug do tableRowElements
+//        for (int i = 0; i < tableRowElements.size(); i++) {
+//           Element row = tableRowElements.get(i);
+//           Elements rowItems = row.select("td");
+//           for (int j = 0; j < rowItems.size(); j++) {
+//        	  System.out.println(j + "==>");
+//              System.out.println(rowItems.get(j).text());
+//           }
+//           System.out.println();
+//        }
+        
+        Elements address = tableRowElements.get(1).select("td");
+        
+		String typeOfStreet = address.get(0).text().split(" ", 2)[0];
+		
+		String street = address.get(0).text().split(" ", 2)[1];
+		
+		String neighborHood = address.get(1).text();
 
-		String typeOfStreet = div.eq(0).text().trim().split(" ")[0];
+		String city = address.get(2).text().split("/")[0];
 
-		String[] streetNode = div.eq(0).text().trim().split(" ");
-		String street = "";
-		for (int i = 0; i < streetNode.length; i++) {
-			if (i <= 0)
-				continue;
-			if (streetNode[i] == "-")
-				break;
-			street += streetNode[i];
-			street += " ";
-		}
-		street = street.trim();
+		String estate = address.get(2).text().split("/")[1];
 
-		String neighborHood = div.eq(1).text().trim();
-
-		String city = div.eq(2).text().trim().split("/")[0].trim();
-		String estate = div.eq(2).text().trim().split("/")[1].trim();
-
-		String cep = div.eq(3).text().trim();	
+		String cep = address.get(3).text();	
 
 		return new Address(cep, typeOfStreet, street, neighborHood,
 				city, estate);		
@@ -106,12 +113,22 @@ public class CorreiosMobileCrawler {
 
 		List<NameValuePair> paramList = new ArrayList<NameValuePair>();
 
-		paramList.add(new BasicNameValuePair("cepEntrada", endereco));
-		paramList.add(new BasicNameValuePair("tipoCep", ""));
-		paramList.add(new BasicNameValuePair("cepTemp", ""));
-		paramList.add(new BasicNameValuePair("metodo", "buscarCep"));
+		paramList.add(new BasicNameValuePair("relaxation", endereco));
+		paramList.add(new BasicNameValuePair("tipoCep", "ALL"));
+		paramList.add(new BasicNameValuePair("semelhante", "N"));
+		
 
 		return paramList;
+	}
+	
+	@Test
+	public void test(){
+			try {
+				System.out.println(getAddress("13171805"));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 }
