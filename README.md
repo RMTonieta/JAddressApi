@@ -30,3 +30,6 @@ Logradouro:
 
 Projeto baseado no AddressApi que pode ser encontrado em:
 https://github.com/emersonsoares/AddressAPI
+
+### Licença
+MIT
