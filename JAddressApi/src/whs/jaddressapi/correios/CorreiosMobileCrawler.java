@@ -23,13 +23,14 @@ import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import whs.jaddressapi.base.Address;
+import whs.jaddressapi.exceptions.AddressNotFoundException;
 
 
 /**
  * @author WilliamStenico 17/09/2013
  * 
- * Classe respons�vel por interagir com o site dos correios Chamado de
- * MOBILE pois a url dos correios � mobile
+ * Classe responsável por interagir com o site dos correios Chamado de
+ * MOBILE pois a url dos correios é mobile
  */
 public class CorreiosMobileCrawler {
 
@@ -39,8 +40,6 @@ public class CorreiosMobileCrawler {
 
 	
 	public CorreiosMobileCrawler() {
-
-		
 	}
 
 	public Address getAddress(String addressInput) throws Exception {
@@ -85,8 +84,12 @@ public class CorreiosMobileCrawler {
 //           }
 //           System.out.println();
 //        }
-        
-        Elements address = tableRowElements.get(1).select("td");
+		
+		if (tableRowElements == null || tableRowElements.isEmpty()) {
+			throw new AddressNotFoundException();
+		}
+		
+		Elements address = tableRowElements.get(1).select("td");
         
 		String typeOfStreet = address.get(0).text().split(" ", 2)[0];
 		
@@ -100,8 +103,10 @@ public class CorreiosMobileCrawler {
 
 		String cep = address.get(3).text();	
 
-		return new Address(cep, typeOfStreet, street, neighborHood,
-				city, estate);		
+		return new Address(cep, typeOfStreet, street, neighborHood, city, estate);
+			
+			
+		        		
 	}
 
 	/*
@@ -123,12 +128,12 @@ public class CorreiosMobileCrawler {
 	
 	@Test
 	public void test(){
-			try {
-				System.out.println(getAddress("13171805"));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			System.out.println(getAddress("13171805"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

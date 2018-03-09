@@ -9,15 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import whs.jaddressapi.base.Address;
-import whs.jaddressapi.correios.CorreiosMobileCrawler;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import whs.jaddressapi.base.Address;
+import whs.jaddressapi.correios.CorreiosMobileCrawler;
+
 /**
  * Servlet implementation class CorreiosRepository
  */
+@CrossOrigin
+@RestController
 public class CorreiosRepository extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -33,8 +38,7 @@ public class CorreiosRepository extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 
 			String endereco = request.getParameter("end");
