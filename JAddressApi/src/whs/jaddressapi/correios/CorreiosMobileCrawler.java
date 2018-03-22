@@ -29,8 +29,9 @@ import whs.jaddressapi.exceptions.AddressNotFoundException;
 /**
  * @author WilliamStenico 17/09/2013
  * 
- * Classe responsável por interagir com o site dos correios Chamado de
- * MOBILE pois a url dos correios é mobile
+ * Classe responsável por interagir com o site dos correios 
+ * Chamado de MOBILE pois a url dos correios é mobile
+ * 
  */
 public class CorreiosMobileCrawler {
 
@@ -89,29 +90,25 @@ public class CorreiosMobileCrawler {
 			throw new AddressNotFoundException();
 		}
 		
+		//charactere que persiste ao final das pesquisas e que não é espaço
+		String stringWeirdFinalSpace = " ";
+		
 		Elements address = tableRowElements.get(1).select("td");
         
-		String typeOfStreet = address.get(0).text().split(" ", 2)[0];
+		String typeOfStreet = address.get(0).text().split(" ", 2)[0].trim();
+		String street = address.get(0).text().split(" ", 2)[1].trim().replace(stringWeirdFinalSpace, "");
+		String neighborHood = address.get(1).text().trim().replace(stringWeirdFinalSpace, "");
+		String city = address.get(2).text().split("/")[0].trim().replace(stringWeirdFinalSpace, "");
+		String estate = address.get(2).text().split("/")[1].trim().replace(stringWeirdFinalSpace, "");
+		String cep = address.get(3).text().trim().replace(stringWeirdFinalSpace, "");
 		
-		String street = address.get(0).text().split(" ", 2)[1];
-		
-		String neighborHood = address.get(1).text();
-
-		String city = address.get(2).text().split("/")[0];
-
-		String estate = address.get(2).text().split("/")[1];
-
-		String cep = address.get(3).text();	
-
 		return new Address(cep, typeOfStreet, street, neighborHood, city, estate);
-			
-			
-		        		
+		    		
 	}
 
 	/*
 	 * Retorna a lista dos parametros usados no site dos correios. No caso o
-	 * campo cepEntrada pode ser um endere�o por exemplo nomeRua, Cidade
+	 * campo cepEntrada pode ser um endereço por exemplo nomeRua, Cidade
 	 */
 	public List<NameValuePair> getInputParams(String endereco)
 			throws UnsupportedEncodingException {
